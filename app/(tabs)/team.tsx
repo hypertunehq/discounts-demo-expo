@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "@/components/Text";
 import { Colors } from "@/constants/Colors";
 
-export default function HomeScreen() {
+export default function Team() {
   return (
     <View style={styles.container}>
       <Text>Coming soon.</Text>
