@@ -2,14 +2,14 @@
 
 import * as sdk from "hypertune";
 
-export const queryId = "40e0abc9-45bf-4d73-8c47-edd7c7a19e06";
+export const queryId = "ec3e0220-6064-4fe9-9e2c-4bb77a25f044";
 
-export const query: sdk.Query<sdk.ObjectValueWithVariables> = {"variableDefinitions":{},"fragmentDefinitions":{"PlanPrices":{"type":"InlineFragment","objectTypeName":"PlanPrices","selection":{"free":{"fieldArguments":{},"fieldQuery":null},"pro":{"fieldArguments":{},"fieldQuery":null},"business":{"fieldArguments":{},"fieldQuery":null}}},"Plans":{"type":"InlineFragment","objectTypeName":"Plans","selection":{"free":{"fieldArguments":{},"fieldQuery":null},"pro":{"fieldArguments":{},"fieldQuery":null},"business":{"fieldArguments":{},"fieldQuery":null}}},"Feature":{"type":"InlineFragment","objectTypeName":"Feature","selection":{"name":{"fieldArguments":{},"fieldQuery":null},"plans":{"fieldArguments":{},"fieldQuery":{"Plans":{"type":"FragmentSpread","fragmentName":"Plans"}}}}},"FeatureGroup":{"type":"InlineFragment","objectTypeName":"FeatureGroup","selection":{"name":{"fieldArguments":{},"fieldQuery":null},"feature":{"fieldArguments":{},"fieldQuery":{"Feature":{"type":"FragmentSpread","fragmentName":"Feature"}}}}}},"fieldQuery":{"Query":{"type":"InlineFragment","objectTypeName":"Query","selection":{"root":{"fieldArguments":{"__isPartialObject__":true},"fieldQuery":{"Root":{"type":"InlineFragment","objectTypeName":"Root","selection":{"isDiscountEnabled":{"fieldArguments":{},"fieldQuery":null},"prices":{"fieldArguments":{},"fieldQuery":{"PlanPrices":{"type":"FragmentSpread","fragmentName":"PlanPrices"}}},"featureGrid":{"fieldArguments":{},"fieldQuery":{"FeatureGroup":{"type":"FragmentSpread","fragmentName":"FeatureGroup"}}}}}}}}}}};
+export const query: sdk.Query<sdk.ObjectValueWithVariables> = {"variableDefinitions":{},"fragmentDefinitions":{"Discount":{"type":"InlineFragment","objectTypeName":"Discount","selection":{"isEnabled":{"fieldArguments":{},"fieldQuery":null},"percentage":{"fieldArguments":{},"fieldQuery":null},"name":{"fieldArguments":{},"fieldQuery":null}}},"PlanPrices":{"type":"InlineFragment","objectTypeName":"PlanPrices","selection":{"free":{"fieldArguments":{},"fieldQuery":null},"pro":{"fieldArguments":{},"fieldQuery":null},"business":{"fieldArguments":{},"fieldQuery":null}}},"Plans":{"type":"InlineFragment","objectTypeName":"Plans","selection":{"free":{"fieldArguments":{},"fieldQuery":null},"pro":{"fieldArguments":{},"fieldQuery":null},"business":{"fieldArguments":{},"fieldQuery":null}}},"Feature":{"type":"InlineFragment","objectTypeName":"Feature","selection":{"name":{"fieldArguments":{},"fieldQuery":null},"plans":{"fieldArguments":{},"fieldQuery":{"Plans":{"type":"FragmentSpread","fragmentName":"Plans"}}}}},"FeatureGroup":{"type":"InlineFragment","objectTypeName":"FeatureGroup","selection":{"name":{"fieldArguments":{},"fieldQuery":null},"feature":{"fieldArguments":{},"fieldQuery":{"Feature":{"type":"FragmentSpread","fragmentName":"Feature"}}}}}},"fieldQuery":{"Query":{"type":"InlineFragment","objectTypeName":"Query","selection":{"root":{"fieldArguments":{"__isPartialObject__":true},"fieldQuery":{"Root":{"type":"InlineFragment","objectTypeName":"Root","selection":{"discounts":{"fieldArguments":{},"fieldQuery":{"Discount":{"type":"FragmentSpread","fragmentName":"Discount"}}},"prices":{"fieldArguments":{},"fieldQuery":{"PlanPrices":{"type":"FragmentSpread","fragmentName":"PlanPrices"}}},"featureGrid":{"fieldArguments":{},"fieldQuery":{"FeatureGroup":{"type":"FragmentSpread","fragmentName":"FeatureGroup"}}}}}}}}}}};
   
 /**
  * @deprecated use '@vercel/flags/providers/hypertune' package instead.
  */
-export const vercelFlagDefinitions = {"isDiscountEnabled":{"options":[{"label":"Off","value":false},{"label":"On","value":true}],"origin":"https://app.hypertune.com/projects/3652/main/draft/logic?selected_field_path=root%3EisDiscountEnabled"}};
+export const vercelFlagDefinitions = {};
 
 export type Rec = {
 
@@ -61,10 +61,88 @@ export type Rec2 = {
   environment: Environment;
   user: Rec3;
   organization: Rec4;
+  referralCode: string;
 }
 
 export type RootArgs = {
   context: Rec2;
+}
+
+export type Discount = {
+  isEnabled: boolean;
+  percentage: number;
+  name: string;
+}
+
+const discountFallback = {isEnabled:false,percentage:0,name:""};
+
+export class DiscountNode extends sdk.Node {
+  override typeName = "Discount" as const;
+
+  get({ fallback = discountFallback as Discount}: { fallback?: Discount } = {}): Discount {
+    const getQuery = null;
+    return this.getValue({ query: getQuery, fallback }) as Discount;
+  }
+
+  /**
+   * [Open in Hypertune UI]({@link https://app.hypertune.com/projects/3652/main/draft/schema?selected_schema_type=%7B%22type%22%3A%22object%22%2C%22name%22%3A%22Discount%22%2C%22selectedChildName%22%3A%22isEnabled%22%7D})
+   */
+  isEnabled({ args = {}, fallback }: { args?: Rec; fallback: boolean; }): boolean {
+    const props0 = this.getFieldNodeProps("isEnabled", { fieldArguments: args });
+    const expression0 = props0.expression;
+
+    if (
+      expression0 &&
+      expression0.type === "BooleanExpression"
+    ) {
+      const node = new sdk.BooleanNode(props0);
+      return node.get({ fallback });
+    }
+
+    const node = new sdk.BooleanNode(props0);
+    node._logUnexpectedTypeError();
+    return node.get({ fallback });
+  }
+
+  /**
+   * [Open in Hypertune UI]({@link https://app.hypertune.com/projects/3652/main/draft/schema?selected_schema_type=%7B%22type%22%3A%22object%22%2C%22name%22%3A%22Discount%22%2C%22selectedChildName%22%3A%22percentage%22%7D})
+   */
+  percentage({ args = {}, fallback }: { args?: Rec; fallback: number; }): number {
+    const props0 = this.getFieldNodeProps("percentage", { fieldArguments: args });
+    const expression0 = props0.expression;
+
+    if (
+      expression0 &&
+      (expression0.type === "IntExpression" ||
+      expression0.type === "FloatExpression")
+    ) {
+      const node = new sdk.FloatNode(props0);
+      return node.get({ fallback });
+    }
+    const node = new sdk.FloatNode(props0);
+    node._logUnexpectedTypeError();
+    return fallback;
+  }
+
+  /**
+   * [Open in Hypertune UI]({@link https://app.hypertune.com/projects/3652/main/draft/schema?selected_schema_type=%7B%22type%22%3A%22object%22%2C%22name%22%3A%22Discount%22%2C%22selectedChildName%22%3A%22name%22%7D})
+   */
+  name({ args = {}, fallback }: { args?: Rec; fallback: string; }): string {
+    const props0 = this.getFieldNodeProps("name", { fieldArguments: args });
+    const expression0 = props0.expression;
+
+    if (
+      expression0 &&
+      expression0.type === "StringExpression"
+    ) {
+      const node = new sdk.StringNode(props0);
+      return node.get({ fallback });
+    }
+
+    const node = new sdk.StringNode(props0);
+    node._logUnexpectedTypeError();
+    return node.get({ fallback });
+  }
 }
 
 export type PlanPrices = {
@@ -337,12 +415,12 @@ export class FeatureGroupNode extends sdk.Node {
 }
 
 export type Root = {
-  isDiscountEnabled: boolean;
+  discounts: Discount[];
   prices: PlanPrices;
   featureGrid: FeatureGroup[];
 }
 
-const rootFallback = {isDiscountEnabled:false,prices:{free:0,pro:0,business:0},featureGrid:[]};
+const rootFallback = {discounts:[],prices:{free:0,pro:0,business:0},featureGrid:[]};
 
 export class RootNode extends sdk.Node {
   override typeName = "Root" as const;
@@ -358,23 +436,26 @@ export class RootNode extends sdk.Node {
   }
 
   /**
-   * [Open in Hypertune UI]({@link https://app.hypertune.com/projects/3652/main/draft/logic?selected_field_path=root%3EisDiscountEnabled})
+   * [Open in Hypertune UI]({@link https://app.hypertune.com/projects/3652/main/draft/logic?selected_field_path=root%3Ediscounts})
    */
-  isDiscountEnabled({ args = {}, fallback }: { args?: Rec; fallback: boolean; }): boolean {
-    const props0 = this.getFieldNodeProps("isDiscountEnabled", { fieldArguments: args });
-    const expression0 = props0.expression;
+  discounts({ args = {}, listFallbackLength = 0 }: { args?: Rec; listFallbackLength?: number; } = {}): DiscountNode[] {
+    const props0 = this.getFieldNodeProps("discounts", { fieldArguments: args });
 
-    if (
-      expression0 &&
-      expression0.type === "BooleanExpression"
-    ) {
-      const node = new sdk.BooleanNode(props0);
-      return node.get({ fallback });
-    }
+    return new sdk.Node(props0).getItemNodeProps({ fallbackLength: listFallbackLength }).map((props1) => {
+      const expression1 = props1.expression;
 
-    const node = new sdk.BooleanNode(props0);
-    node._logUnexpectedTypeError();
-    return node.get({ fallback });
+      if (
+        expression1 &&
+        expression1.type === "ObjectExpression" &&
+        expression1.objectTypeName === "Discount"
+      ) {
+        return new DiscountNode(props1);
+      }
+  
+      const node = new DiscountNode(props1);
+      node._logUnexpectedTypeError();
+      return node;
+    });
   }
 
   /**
@@ -442,7 +523,7 @@ export type Source = {
   root: Root;
 }
 
-const sourceFallback = {root:{isDiscountEnabled:false,prices:{free:0,pro:0,business:0},featureGrid:[]}};
+const sourceFallback = {root:{discounts:[],prices:{free:0,pro:0,business:0},featureGrid:[]}};
 
 export type Rec6 = {
   args: RootArgs;

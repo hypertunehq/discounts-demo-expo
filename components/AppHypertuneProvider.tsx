@@ -29,6 +29,7 @@ export default function AppHypertuneProvider({
             country: "UnitedKingdom",
           },
           organization: { id: "1", name: "test org", plan: "free" },
+          referralCode: "",
         },
       }}
     >

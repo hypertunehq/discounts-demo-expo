@@ -15,6 +15,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          title: "Plans",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "paper-plane" : "paper-plane-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="projects"
+        options={{
           title: "Projects",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
@@ -31,18 +43,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "person" : "person-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="plans"
-        options={{
-          title: "Plans",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "paper-plane" : "paper-plane-outline"}
               color={color}
             />
           ),
